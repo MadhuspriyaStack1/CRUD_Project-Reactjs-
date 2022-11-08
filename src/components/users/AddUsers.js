@@ -1,23 +1,33 @@
+import Axios from 'axios';
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom';
 
 const AddUsers = () => {
-
+    let history =useHistory();
     const[user,setUser]=useState({
         "name":"",
         "username":"",
         "email":"",
         "phone":""
     })
+    const {name, username,email,phone} = user;
 
     const onInputChange = (e) =>{
         console.log(e.target.value);
+        setUser({...user,[e.target.name]:e.target.value});
     }
-    const {name, username,email,phone} = user;
+    
+    const onSubmit = async (e) => {
+      e.preventDefault();
+      await Axios.post("http://localhost:3003/users",user)
+      history.push("/")
+    }
+
   return (
     <div className="container">
       <div className="w-80 m-20 shadow p-10">
         <h2 className="text-center m-4">Add A User</h2>
-        <form>
+        <form onSubmit={e => onSubmit(e)}>
           <div className="form-group m-5">
             <input 
               type="text"
